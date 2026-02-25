@@ -57,7 +57,7 @@ def task(function=None, run_locally=None, queue_name=None, task_name=None, delay
         # so that the IDEs autocompletion for kwargs will work everywhere
         task_function = lambda **kwargs: sqs.send_task(task_name=task_name_to_use, task_kwargs=kwargs,
                                                        run_locally=run_locally, queue_name=queue_name,
-                                                       delay=None)
+                                                       delay=delay)
 
         # add sync() method to this function, so the function can be called directly
         # this is needed for two reasons:
