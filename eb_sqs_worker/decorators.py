@@ -10,7 +10,7 @@ from eb_sqs_worker import sqs
 logger = logging.getLogger(__name__)
 
 
-def task(function=None, run_locally=None, queue_name=None, task_name=None):
+def task(function=None, run_locally=None, queue_name=None, task_name=None, delay=None):
     """
     Decorate functions with this decorator to automatically register them in AWS_EB_ENABLED_TASKS.
     Don't supply positional arguments, use only keyword arguments, otherwise the decorator will work.
@@ -56,7 +56,8 @@ def task(function=None, run_locally=None, queue_name=None, task_name=None):
         # we do this instead of adding traditional delay function,
         # so that the IDEs autocompletion for kwargs will work everywhere
         task_function = lambda **kwargs: sqs.send_task(task_name=task_name_to_use, task_kwargs=kwargs,
-                                                       run_locally=run_locally, queue_name=queue_name)
+                                                       run_locally=run_locally, queue_name=queue_name,
+                                                       delay=None)
 
         # add sync() method to this function, so the function can be called directly
         # this is needed for two reasons:

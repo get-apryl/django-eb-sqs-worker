@@ -21,7 +21,7 @@ sqs = boto3.resource('sqs',
                      aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
 
 
-def send_task(task_name, task_kwargs, run_locally=None, queue_name=None):
+def send_task(task_name, task_kwargs, run_locally=None, queue_name=None, delay=None):
     """
     Sends task to SQS queue to be run asynchronously on worker environment instances.
     If settings.AWS_EB_RUN_TASKS_LOCALLY  is set to True, does not send the task
@@ -71,7 +71,7 @@ def send_task(task_name, task_kwargs, run_locally=None, queue_name=None):
 
         # send task to sqs workers
         # see https://boto3.amazonaws.com/v1/documentation/api/latest/guide/sqs.html
-        response = queue.send_message(MessageBody=json.dumps(task_data))
+        response = queue.send_message(MessageBody=json.dumps(task_data), DelaySeconds=delay)
         logger.info(f"Sent message {task_data} to SQS queue {queue_name}. Got response: {response}")
 
         # print(response.get('MessageId'))
